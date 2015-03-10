@@ -1,6 +1,5 @@
 ---
 # file: tasks/controller.yml
-
 - name: Prepare controller
   npm: name=cozy-controller global=yes
 
@@ -16,10 +15,11 @@
 
 - include: supervisor_restart.yml tags=restart-supervisor
 
-- name: Check if Cozy-controller is properly running
-  uri: url=http://127.0.0.1:9002/
-  register: controller_message
-  failed_when: '"Wrong auth token" != (controller_message.content|from_json).error'
+- wait_for: host=127.0.0.1 port=9002 delay=10 state=drained
 
-# TODO: Add support for monit
-# TODO: Add possibility to change NODE_ENV var in init file
+- name: Check Cozy's components status
+  shell: cozy-monitor status > /tmp/status
+  ignore_errors: True
+
+- name: Check if cozy-controller is properly running
+  shell: cat /tmp/status | grep controller | grep up && rm -f /tmp/status

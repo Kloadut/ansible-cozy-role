@@ -1,10 +1,7 @@
 ---
-# file: vars/defaults.yml
+# file: vars/main.yml
 
-cozy_token: 'MySecretCozyCloudToken'
+cozy_token: 'TokenToChange'
 
-couch_login: 'MySecretLogin'
-couch_password: 'MySecretPassword'
-
-nginx:
-  hostname: cozy.mondomain.tld
+couch_login: 'LoginToChange'
+couch_password: 'PasswordToChange'

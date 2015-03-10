@@ -8,7 +8,7 @@
   file: path=/usr/local/cozy-indexer state=directory owner=cozy group=cozy
 
 - name: Clone git Cozy data indexer repo
-  git: repo=https://github.com/mycozycloud/cozy-data-indexer.git dest=/usr/local/cozy-indexer/cozy-data-indexer
+  git: repo=https://github.com/cozy/cozy-data-indexer.git dest=/usr/local/cozy-indexer/cozy-data-indexer
 
 - name: Install requirements
   pip: requirements=/usr/local/cozy-indexer/cozy-data-indexer/requirements/common.txt virtualenv=/usr/local/cozy-indexer/cozy-data-indexer/virtualenv
@@ -22,5 +22,9 @@
 
 - include: supervisor_restart.yml tags=restart-supervisor
 
-- name: Check if Cozy-indexer is properly running
-  uri: url=http://127.0.0.1:9102/
+- name: Check Cozy's components status
+  shell: cozy-monitor status > /tmp/status
+  ignore_errors: True
+
+- name: Check if cozy-indexer is properly running
+  shell: cat /tmp/status | grep index | grep up && rm -f /tmp/status
